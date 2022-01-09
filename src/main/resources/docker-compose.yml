@@ -1,0 +1,54 @@
+version: '2'
+services:
+  hello-world-demo:
+    image: vishnu-spring-boot-dos
+    container_name: vishnu-spring-boot-dos
+    networks:
+      private-subnet:
+        ipv4_address: 172.18.0.2
+    ports:
+      - 8080:8080
+  prometheus:
+    image: prom/prometheus
+    user: root
+    container_name: prometheus-latest
+    volumes:
+      - /Users/vishn/workingdir/vv/vishnu-spring-boot-dos/src/main/resources/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /Users/vishn/workingdir/vv/vishnu-spring-boot-dos/src/main/resources/alert.rules:/etc/alert.rules
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    networks:
+      private-subnet:
+        ipv4_address: 172.18.0.3
+#  grafana:
+#    image: grafana/grafana
+#    container_name: grafana
+#    volumes:
+#      - /tmp:/tmp
+#    ports:
+#      - 3000:3000
+#    networks:
+#      private-subnet:
+#        ipv4_address: 172.18.0.8
+  alertmanager:
+    image: prom/alertmanager
+    user: root
+    privileged: true
+    volumes:
+      - /Users/vishn/workingdir/vv/vishnu-spring-boot-dos/src/main/resources/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - '9093:9093'
+    networks:
+      private-subnet:
+        ipv4_address: 172.18.0.4
+
+
+networks:
+  private-subnet:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16

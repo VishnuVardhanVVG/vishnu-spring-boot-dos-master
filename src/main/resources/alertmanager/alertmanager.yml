@@ -1,0 +1,15 @@
+global:
+# slack_api_url: '<api>'
+
+route:
+  receiver: 'slack'
+  repeat_interval: 1m
+
+
+receivers:
+  - name: 'slack'
+    slack_configs:
+      - send_resolved: true
+        username: 'mail.vishnuvvg'
+        channel: '#alerts'
+        api_url: 'https://hooks.slack.com/services/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'

@@ -1,0 +1,21 @@
+groups:
+- name: springboot-sample-rule
+  rules:
+
+  # Alert for any instance that is unreachable for >1 minute.
+    - alert: InstanceDown
+      expr: up == 0
+      for: 1m
+      labels:
+        severity: page
+      annotations:
+        summary: "Instance {{ $labels.instance }} down"
+        description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+
+    - alert: dos-attack-count
+      expr: rate(dos_attack_counter_total[30s])>0.000001
+      for: 15s
+      labels:
+        severity: high
+      annotations:
+        summary: DOS detected
